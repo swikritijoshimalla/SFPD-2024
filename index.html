@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>San Francisco Crime Data Analysis - 2024</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Masters research project analyzing 2024 San Francisco crime data with Tableau and ArcGIS." />
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#101720; --muted:#1a2330; --text:#e6edf3; --sub:#9fb2c7; --accent:#4cc9f0; --accent-2:#f72585;
+      --ring: 0 0 0 3px rgba(76,201,240,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;
+      color:var(--text); background:linear-gradient(180deg,#070a0e, var(--bg) 160px);
+    }
+    header{padding:32px 20px 16px; max-width:1100px; margin:0 auto;}
+    .title{font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; letter-spacing:.2px}
+    .subtitle{color:var(--sub); margin-top:6px}
+
+    nav.tabbar{
+      position:sticky; top:0; z-index:5; backdrop-filter:saturate(120%) blur(8px);
+      background:rgba(11,15,20,.75); border-bottom:1px solid #15202d;
+    }
+    .tabs{max-width:1100px; margin:0 auto; padding:10px 8px; display:flex; gap:8px; flex-wrap:wrap;}
+    [role="tab"]{
+      appearance:none; border:none; padding:10px 14px; border-radius:999px; cursor:pointer; color:var(--sub);
+      background:transparent; transition:all .2s ease; font-weight:600;
+    }
+    [role="tab"][aria-selected="true"]{
+      color:var(--text); background:var(--muted); box-shadow: inset 0 0 0 1px #203043, 0 6px 16px rgba(0,0,0,.25);
+    }
+    [role="tab"]:focus-visible{outline:none; box-shadow: var(--ring)}
+
+    main{max-width:1100px; margin:14px auto 60px; padding:0 18px}
+    section[role="tabpanel"]{display:none; animation:fade .2s ease}
+    section[role="tabpanel"].active{display:block}
+    @keyframes fade{from{opacity:.6; transform:translateY(2px)} to{opacity:1; transform:none}}
+
+    .card{
+      background:linear-gradient(180deg,var(--card), #0c131c);
+      border:1px solid #15202d; border-radius:16px; padding:18px; margin:14px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .grid{display:grid; gap:14px}
+    @media (min-width:900px){ .grid.two{grid-template-columns:1fr 1fr} }
+    h1,h2{margin:6px 0 10px}
+    h1{font-size:1.35rem}
+    h2{font-size:1.25rem}
+    h3{margin:8px 0; font-size:1.05rem; color:var(--accent)}
+    p{margin:8px 0}
+    ul{margin:6px 0 8px 18px}
+    a{color:var(--accent)}
+    .tag{display:inline-block; padding:2px 8px; border-radius:999px; background:#122132; color:#b9d4ea; font-size:.8rem; margin-right:6px}
+    .note{color:#b8c7d8; font-size:.95rem}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#141e28; padding:.1rem .35rem; border-radius:6px; border:1px solid #203043}
+    .iframe-wrap{position:relative; width:100%; padding-top:60%; border-radius:12px; overflow:hidden; border:1px solid #1b2a3a; background:#0f1621}
+    .iframe-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+    footer{max-width:1100px; margin:40px auto; padding:0 18px; color:#94a9bd; font-size:.9rem}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; background:#0e1823; border:1px solid #1b2a3a; margin:6px 6px 0 0}
+    .pill svg{width:16px; height:16px}
+
+    .kvs{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:8px}
+    .kv{background:#0d1722; border:1px solid #1b2a3a; border-radius:10px; padding:10px}
+    .kv .k{color:#8fb4cf; font-size:.85rem}
+    .kv .v{font-weight:600}
+    @media (max-width:560px){ .kvs{grid-template-columns:1fr} }
+
+    /* --- Trends galleries --- */
+    .gallery{display:grid; gap:12px; margin-top:12px}
+    @media (min-width:700px){ .gallery{grid-template-columns:repeat(3,minmax(0,1fr))} }
+    @media (min-width:1024px){ .gallery{grid-template-columns:repeat(4,minmax(0,1fr))} }
+    .figure{
+      background:#0d1722; border:1px solid #1b2a3a; border-radius:12px; overflow:hidden;
+      transition:transform .15s ease, box-shadow .15s ease; cursor:zoom-in;
+    }
+    .figure:hover{transform:translateY(-1px); box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .figure img{display:block; width:100%; height:auto}
+    .figure figcaption{padding:8px 10px; color:#9fb2c7; font-size:.9rem}
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed; inset:0; display:none; place-items:center; background:rgba(8,12,18,.9); z-index:50;
+    }
+    .lightbox.active{display:grid}
+    .lightbox img{max-width:92vw; max-height:86vh; border-radius:10px; border:1px solid #1b2a3a; background:#0b0f14}
+    .lb-controls{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:space-between; pointer-events:none;
+    }
+    .lb-btn{
+      pointer-events:auto; appearance:none; border:none; background:rgba(20,30,40,.8); color:#e6edf3;
+      width:42px; height:42px; border-radius:999px; display:grid; place-items:center; margin:0 12px;
+      border:1px solid #223243; cursor:pointer;
+    }
+    .lb-close{position:fixed; top:16px; right:16px;}
+    .lb-meta{position:fixed; bottom:12px; left:0; right:0; text-align:center; color:#9fb2c7; font-size:.95rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">San Francisco Crime Data Analysis - 2024</div>
+    <div class="subtitle">Masters Research • Visual analytics with <span class="tag">Tableau</span> <span class="tag">ArcGIS</span> • Public Safety Insights</div>
+  </header>
+
+  <nav class="tabbar" aria-label="Primary">
+    <div class="tabs" role="tablist" aria-orientation="horizontal">
+      <button role="tab" aria-selected="true" aria-controls="home" id="tab-home">Home</button>
+      <button role="tab" aria-selected="false" aria-controls="tableau" id="tab-tableau">Trends</button>
+      <button role="tab" aria-selected="false" aria-controls="arcgis" id="tab-arcgis">Hotspots Map</button>
+      <button role="tab" aria-selected="false" aria-controls="sources" id="tab-sources">Data Sources</button>
+      <button role="tab" aria-selected="false" aria-controls="about" id="tab-about">About</button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Home -->
+    <section id="home" role="tabpanel" aria-labelledby="tab-home" class="active">
+      <div class="card">
+        <h1>Overview: Crime in San Francisco (2024)</h1>
+        <p class="note">
+          This project explores 2024 crime patterns across neighborhoods, time-of-day, and crime types. We combine interactive dashboards (Tableau) with spatial analysis (ArcGIS) to surface trends, hotspots, and contextual insights that support public safety decisions.
+        </p>
+
+        <!-- NEW: Home image -->
+        <div class="card" style="text-align:center;">
+          <img src="./SFPD2.jpg" alt="San Francisco Police Department — overview image"
+               style="max-width:100%; height:auto; border-radius:12px; border:1px solid #1b2a3a; margin-top:6px;">
+          <p class="note">Figure: Context image for the 2024 San Francisco crime analysis.</p>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h2>Key Questions</h2>
+            <ul>
+              <li>Which types of crime were reported most frequently in 2024?</li>
+              <li>What are the main crime patterns depending on the day and time?</li>
+              <li>Where are the recurring hotspot areas, and how do they change depending on the day and time?</li>
+              <li>How do temporal factors, like the day of the week or hour of the day, influence crime patterns?</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h2>Methods at a Glance</h2>
+            <ul>
+              <li><strong>Tableau:</strong> time-series, small multiples, drilldowns by district & offense</li>
+              <li><strong>ArcGIS:</strong> hotspot mapping, kernel density, spatial joins & filters</li>
+              <li><strong>Data Ops:</strong> reproducible cleaning, metadata checks, and documentation</li>
+            </ul>
+            <div class="pill" title="Tip">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 7-7 7-7-7 7-7z" stroke="#4cc9f0" stroke-width="1.6"/></svg>
+              Use the tabs above to explore dashboards, maps, and data sources.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tableau / Trends -->
+    <section id="tableau" role="tabpanel" aria-labelledby="tab-tableau">
+      <div class="card">
+        <h2>Trends & Comparisons (Tableau)</h2>
+        <p class="note">
+          Embed your published Tableau views here. In Tableau Public/Server, use <span class="kbd">Share → Embed Code</span> and paste the <code>&lt;iframe&gt;</code> below.
+        </p>
+        <div class="iframe-wrap">
+          <!-- Replace the src with your Tableau embed URL (optional) -->
+          <iframe
+            title="Tableau: SF Crime 2024"
+            src="https://public.tableau.com/views/YOUR_WORKBOOK/YOUR_SHEET?:showVizHome=no&:embed=true"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Gallery 1: Top 5 Incident Types by Day (7 images) -->
+      <div class="card">
+        <h2>Top 5 Incident Types by Day</h2>
+        <p class="note">Static exports for quick comparison. Click any image to view larger; use ←/→ or the on-screen arrows to navigate.</p>
+
+        <div class="gallery" id="trend-gallery">
+          <figure class="figure" data-day="Sunday">
+            <img src="./Sun-Top5.png" alt="Top 5 incident types - Sunday" loading="lazy">
+            <figcaption>Sunday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Monday">
+            <img src="./Mon-Top5.png" alt="Top 5 incident types - Monday" loading="lazy">
+            <figcaption>Monday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Tuesday">
+            <img src="./Tue-Top5.png" alt="Top 5 incident types - Tuesday" loading="lazy">
+            <figcaption>Tuesday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Wednesday">
+            <img src="./Wed-Top5.png" alt="Top 5 incident types - Wednesday" loading="lazy">
+            <figcaption>Wednesday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Thursday">
+            <img src="./Thu-Top5.png" alt="Top 5 incident types - Thursday" loading="lazy">
+            <figcaption>Thursday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Friday">
+            <img src="./Fri-Top5.png" alt="Top 5 incident types - Friday" loading="lazy">
+            <figcaption>Friday</figcaption>
+          </figure>
+          <figure class="figure" data-day="Saturday">
+            <img src="./Sat-Top5.png" alt="Top 5 incident types - Saturday" loading="lazy">
+            <figcaption>Saturday</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Gallery 2: Top 5 Crime Categories Day & Time Pattern (5 images) -->
+      <div class="card">
+        <h2>Top 5 Crime Categories Day &amp; Time Pattern</h2>
+        <p class="note">Static exports summarizing category patterns across day & time. Click any image to view larger; use ←/→ or the on-screen arrows to navigate.</p>
+
+        <div class="gallery" id="pattern-gallery">
+          <figure class="figure" data-label="Day & Time Pattern - Malicious Mischief">
+            <img src="./Time&Day-MaliciousMischief.png" alt="Top 5 Crime Categories — Day & Time Pattern — Malicious Mischief" loading="lazy">
+            <figcaption>Malicious Mischief</figcaption>
+          </figure>
+          <figure class="figure" data-label="Day & Time Pattern - Larceny Theft">
+            <img src="./Time&Day-LarcenyTheft.png" alt="Top 5 Crime Categories — Day & Time Pattern — Larceny Theft" loading="lazy">
+            <figcaption>Larceny Theft</figcaption>
+          </figure>
+          <figure class="figure" data-label="Day & Time Pattern - Burglary">
+            <img src="./Time&Day-Burglary.png" alt="Top 5 Crime Categories — Day & Time Pattern — Burglary" loading="lazy">
+            <figcaption>Burglary</figcaption>
+          </figure>
+          <figure class="figure" data-label="Day & Time Pattern - Assault">
+            <img src="./Time&Day-Assault.png" alt="Top 5 Crime Categories — Day & Time Pattern — Assault" loading="lazy">
+            <figcaption>Assault</figcaption>
+          </figure>
+          <figure class="figure" data-label="Day & Time Pattern - Motor Vehicle Theft">
+            <img src="./Time&Day-MotorVehicleTheft.png" alt="Top 5 Crime Categories — Day & Time Pattern — Motor Vehicle Theft" loading="lazy">
+            <figcaption>Motor Vehicle Theft</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Lightbox (shared by all galleries) -->
+      <div class="lightbox" id="lb" aria-modal="true" role="dialog" aria-label="Image viewer" tabindex="-1">
+        <img id="lb-img" alt="">
+        <div class="lb-controls" aria-hidden="true">
+          <button class="lb-btn" id="lb-prev" title="Previous (←)" aria-label="Previous">&#x2039;</button>
+          <button class="lb-btn" id="lb-next" title="Next (→)" aria-label="Next">&#x203A;</button>
+        </div>
+        <button class="lb-btn lb-close" id="lb-close" title="Close (Esc)" aria-label="Close">&#x2715;</button>
+        <div class="lb-meta" id="lb-meta"></div>
+      </div>
+    </section>
+
+    <!-- ArcGIS -->
+    <section id="arcgis" role="tabpanel" aria-labelledby="tab-arcgis">
+      <div class="card">
+        <h2>Hotspots & Spatial Context (ArcGIS)</h2>
+        <p class="note">
+          In ArcGIS Online, open your map/app → <span class="kbd">Embed in Website</span> → copy the <code>&lt;iframe&gt;</code> and replace the one below.
+          Supports Instant Apps, Dashboards, StoryMaps, or a Web Map viewer link.
+        </p>
+        <div class="iframe-wrap">
+          <!-- Replace with your ArcGIS embed (e.g., Instant App or Dashboard appid) -->
+          <iframe
+            title="ArcGIS: SF Crime Hotspots 2024"
+            src="https://www.arcgis.com/apps/instant/basic/index.html?appid=YOUR_APP_ID"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="grid two" style="margin-top:12px">
+          <div class="card">
+            <h3>Suggested Layers</h3>
+            <ul>
+              <li>Crime incidents (points, 2024 filter)</li>
+              <li>Kernel density or hot spot analysis</li>
+              <li>Police districts, neighborhoods, streets</li>
+              <li>Public amenities (lighting, transit stops) for context</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>User Interactions</h3>
+            <ul>
+              <li>Time slider to focus by month/quarter</li>
+              <li>Category filters (violent, property, quality of life)</li>
+              <li>Click-to-inspect with incident detail popups</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Sources -->
+    <section id="sources" role="tabpanel" aria-labelledby="tab-sources">
+      <div class="card">
+        <h2>Data Sources</h2>
+        <p class="note">
+          Primary source: <a href="https://data.sfgov.org/" target="_blank" rel="noopener">San Francisco Open Data Portal</a>.
+          The panel below pulls live metadata for the Police Incident Reports dataset (2018–present) and embeds the official API docs.
+        </p>
+
+        <!-- Live metadata (auto-filled by JS below) -->
+        <div id="ds-meta" class="card">
+          <h3 id="ds-title">Police Department Incident Reports (2018–Present)</h3>
+          <p id="ds-description" class="note">Loading description…</p>
+
+          <div class="kvs">
+            <div class="kv"><div class="k">Owner</div><div class="v" id="ds-owner">—</div></div>
+            <div class="kv"><div class="k">Last Updated</div><div class="v" id="ds-updated">—</div></div>
+            <div class="kv"><div class="k">Update Frequency</div><div class="v" id="ds-frequency">—</div></div>
+            <div class="kv"><div class="k">Rows × Columns</div><div class="v" id="ds-shape">—</div></div>
+          </div>
+
+          <ul class="note" style="margin-top:10px">
+            <li><a id="ds-portal" target="_blank" rel="noopener">Dataset Portal Page</a></li>
+            <li><a id="ds-about" target="_blank" rel="noopener">About / Metadata</a></li>
+            <li><a id="ds-json" target="_blank" rel="noopener">JSON API</a></li>
+            <li><a id="ds-csv" target="_blank" rel="noopener">CSV Export</a></li>
+            <li><a id="ds-dict" target="_blank" rel="noopener" style="display:none">Data Dictionary (PDF)</a></li>
+          </ul>
+        </div>
+
+        <!-- Official “API Docs” embed (Socrata Foundry) -->
+        <div class="card" style="margin-top:14px">
+          <h3>Official API Docs</h3>
+          <div class="iframe-wrap">
+            <iframe
+              title="Socrata Foundry: API Docs for wg3w-h783"
+              src="https://dev.socrata.com/foundry/data.sfgov.org/wg3w-h783/embed"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <p class="note" style="margin-top:8px">
+            The embed above is provided by Socrata and auto-documents fields, query parameters, and examples.
+          </p>
+        </div>
+
+        <!-- Your project-specific notes -->
+        <div class="card">
+          <h3>Data Notes</h3>
+          <ul>
+            <li>Filtered to events occurring between <em>2024-01-01</em> and <em>2024-12-31</em>.</li>
+            <li>Standardized fields (dates, categories) and checked for missing/duplicate records.</li>
+            <li>Incidents may be reclassified over time; analyses are versioned for reproducibility.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" role="tabpanel" aria-labelledby="tab-about">
+      <div class="card">
+        <h2>About This Project</h2>
+        <p>
+          This site presents my Masters research on San Francisco crime in 2024. I built interactive visualizations in
+          <strong>Tableau</strong> and spatial analyses in <strong>ArcGIS</strong> to explore trends, hotspots, and context.
+        </p>
+        <h3>About Me</h3>
+        <p class="note">
+          (Add 2–3 sentences about your background, program, and interests. Include a contact email or LinkedIn.)
+        </p>
+        <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
+        <div class="pill">Last updated: <span id="updated"></span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> • San Francisco Crime Data Analysis — 2024 • For research & educational purposes.
+  </footer>
+
+  <script>
+    // Simple tab behavior + accessibility
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+    tabs.forEach(tab=>{
+      tab.addEventListener('click', ()=>{
+        tabs.forEach(t=>t.setAttribute('aria-selected','false'));
+        panels.forEach(p=>p.classList.remove('active'));
+        tab.setAttribute('aria-selected','true');
+        document.getElementById(tab.getAttribute('aria-controls')).classList.add('active');
+      });
+      tab.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); tab.click(); }
+      });
+    });
+    // Dates
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('updated').textContent = new Date().toISOString().slice(0,10);
+
+    // --- Socrata metadata → “Data Sources” tab ---
+    (function loadSocrataMeta(){
+      const DS_ID = 'wg3w-h783';
+      const PORTAL = 'https://data.sfgov.org';
+      const metaUrl = `${PORTAL}/api/views/${DS_ID}`;
+
+      const $ = (id) => document.getElementById(id);
+      const setText = (id, val) => { const el = $(id); if (el) el.textContent = (val ?? '—'); };
+
+      // Static links
+      $('ds-portal').href = `${PORTAL}/d/${DS_ID}`;
+      $('ds-about').href  = `${PORTAL}/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/${DS_ID}/about_data`;
+      $('ds-json').href   = `${PORTAL}/resource/${DS_ID}.json`;
+      $('ds-csv').href    = `${PORTAL}/resource/${DS_ID}.csv`;
+
+      // unix seconds → human date
+      const fmtDate = (secs) => {
+        try { if (!secs) return '—';
+          const d = new Date(secs * 1000);
+          return d.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit'});
+        } catch { return '—'; }
+      };
+
+      // safe description
+      const sanitizeToHtml = (text) => {
+        const div = document.createElement('div');
+        div.textContent = text ?? '';
+        return (div.textContent || '').replace(/\n/g, '<br>');
+      };
+
+      // heuristic for "Update Frequency"
+      const findFrequency = (meta) => {
+        const cf = meta?.metadata?.custom_fields || {};
+        const pub = cf.Publishing || cf.PUBLISHING || {};
+        const admin = cf.Administration || cf.ADMINISTRATION || {};
+        const keys = ['Update Frequency','Update frequency','Frequency','Update Schedule','Refresh Rate'];
+        for (const k of keys) {
+          if (pub && Object.prototype.hasOwnProperty.call(pub, k)) return pub[k];
+          if (admin && Object.prototype.hasOwnProperty.call(admin, k)) return admin[k];
+          if (meta?.metadata && Object.prototype.hasOwnProperty.call(meta.metadata, k)) return meta.metadata[k];
+        }
+        return '—';
+      };
+
+      fetch(metaUrl)
+        .then(r => r.json())
+        .then(meta => {
+          setText('ds-title', meta?.name || 'Police Department Incident Reports (2018–Present)');
+          $('ds-description').innerHTML = sanitizeToHtml(meta?.description || '—');
+
+          setText('ds-owner', meta?.owner?.displayName || '—');
+          setText('ds-updated', fmtDate(meta?.rowsUpdatedAt));
+          setText('ds-frequency', findFrequency(meta));
+
+          const columns = Array.isArray(meta?.columns) ? meta.columns.length : undefined;
+          const rows = meta?.numberOfRows ?? meta?.tableAuthor?.totalRows ?? meta?.columnsComputed?.count;
+          setText('ds-shape', (rows && columns) ? `${Number(rows).toLocaleString()} × ${columns}` : '—');
+
+          const attachments = meta?.metadata?.attachments || meta?.attachments || [];
+          const dict = attachments.find(a =>
+            /dictionary/i.test(a?.name || '') ||
+            /data\s*dictionary/i.test(a?.description || '') ||
+            /\.pdf$/i.test(a?.filename || '')
+          );
+          if (dict && dict.assetId) {
+            const dictUrl = `${PORTAL}/api/views/${DS_ID}/files/${dict.assetId}?download=true`;
+            const link = document.getElementById('ds-dict');
+            link.href = dictUrl; link.style.display = '';
+          } else {
+            document.getElementById('ds-dict').style.display = 'none';
+          }
+        })
+        .catch(() => {
+          const d = document.getElementById('ds-description');
+          if (d) d.textContent = 'Could not load live metadata from data.sfgov.org.';
+        });
+    })();
+
+    // --- Shared lightbox for all galleries ---
+    (function(){
+      const figures = Array.from(document.querySelectorAll('.gallery .figure'));
+      if (!figures.length) return;
+
+      const lb = document.getElementById('lb');
+      const lbImg = document.getElementById('lb-img');
+      const lbMeta = document.getElementById('lb-meta');
+      const prevBtn = document.getElementById('lb-prev');
+      const nextBtn = document.getElementById('lb-next');
+      const closeBtn = document.getElementById('lb-close');
+
+      let idx = 0;
+
+      const open = (i) => {
+        idx = (i + figures.length) % figures.length;
+        const fig = figures[idx];
+        const img = fig.querySelector('img');
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+        const label =
+          fig.dataset.label ||
+          (fig.dataset.day ? `Top 5 Incident Types — ${fig.dataset.day}` : '') ||
+          (fig.querySelector('figcaption')?.textContent || '');
+        lbMeta.textContent = label;
+        lb.classList.add('active');
+        lb.focus();
+      };
+      const close = () => {
+        lb.classList.remove('active');
+        lbImg.removeAttribute('src');
+      };
+      const next = () => open(idx + 1);
+      const prev = () => open(idx - 1);
+
+      figures.forEach((fig, i) => {
+        fig.addEventListener('click', () => open(i));
+        fig.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+        });
+        fig.tabIndex = 0;
+        fig.setAttribute('role','button');
+        const lbl = fig.dataset.label || fig.dataset.day || fig.querySelector('figcaption')?.textContent || 'image';
+        fig.setAttribute('aria-label', `Open ${lbl}`);
+      });
+
+      nextBtn.addEventListener('click', next);
+      prevBtn.addEventListener('click', prev);
+      closeBtn.addEventListener('click', close);
+      lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lb.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === 'ArrowRight') next();
+        else if (e.key === 'ArrowLeft') prev();
+      });
+    })();
+  </script>
+</body>
+</html>
