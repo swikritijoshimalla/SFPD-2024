@@ -120,10 +120,10 @@
       <div class="card">
         <h1>Overview: Crime in San Francisco (2024)</h1>
         <p class="note">
-          This project explores 2024 crime patterns across neighborhoods, time-of-day, and crime types. We combine interactive dashboards (Tableau) with spatial analysis (ArcGIS) to surface trends, hotspots, and contextual insights that support public safety decisions.
+          This project analyzes crime patterns in San Francisco during 2024, focusing on neighborhoods, time of day, and types of offenses. Using interactive dashboards created in Tableau and spatial mapping in ArcGIS, the analysis uncovers key trends, recurring hotspots, and contextual insights. The goal is to provide data-driven support for public safety planning, resource allocation, and community awareness initiatives.
         </p>
 
-        <!-- NEW: Home image -->
+        <!-- Home image -->
         <div class="card" style="text-align:center;">
           <img src="./SFPD2.jpg" alt="San Francisco Police Department — overview image"
                style="max-width:100%; height:auto; border-radius:12px; border:1px solid #1b2a3a; margin-top:6px;">
@@ -175,8 +175,8 @@
 
       <!-- Gallery 1: Top 5 Incident Types by Day (7 images) -->
       <div class="card">
-        <h2>Top 5 Incident Types by Day</h2>
-        <p class="note">Static exports for quick comparison. Click any image to view larger; use ←/→ or the on-screen arrows to navigate.</p>
+        <h2>Top 5 Crime Categories and Average Daily Incidents</h2>
+        <p class="note">This visualization highlights the five most reported crime categories in 2024 and shows how their average occurrences vary by day of the week. It helps identify patterns in daily crime activity and supports better planning for public safety and resource allocation.</p>
 
         <div class="gallery" id="trend-gallery">
           <figure class="figure" data-day="Sunday">
@@ -212,8 +212,8 @@
 
       <!-- Gallery 2: Top 5 Crime Categories Day & Time Pattern (5 images) -->
       <div class="card">
-        <h2>Top 5 Crime Categories Day &amp; Time Pattern</h2>
-        <p class="note">Static exports summarizing category patterns across day & time. Click any image to view larger; use ←/→ or the on-screen arrows to navigate.</p>
+        <h2>Top 5 Crime Categories: Day and Time Patterns</h2>
+        <p class="note">This visualization shows how the top five crime categories vary across different days of the week and times of day. By analyzing these patterns, we can identify when certain crimes are most likely to occur and spot potential high-risk periods. The goal is to provide insights that help law enforcement and city officials plan effective patrol schedules and prevention strategies.</p>
 
         <div class="gallery" id="pattern-gallery">
           <figure class="figure" data-label="Day & Time Pattern - Malicious Mischief">
@@ -346,22 +346,44 @@
       </div>
     </section>
 
-    <!-- About -->
-    <section id="about" role="tabpanel" aria-labelledby="tab-about">
-      <div class="card">
-        <h2>About This Project</h2>
-        <p>
-          This site presents my Masters research on San Francisco crime in 2024. I built interactive visualizations in
-          <strong>Tableau</strong> and spatial analyses in <strong>ArcGIS</strong> to explore trends, hotspots, and context.
-        </p>
-        <h3>About Me</h3>
-        <p class="note">
-          (Add 2–3 sentences about your background, program, and interests. Include a contact email or LinkedIn.)
-        </p>
-        <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
-        <div class="pill">Last updated: <span id="updated"></span></div>
+<!-- About -->
+<section id="about" role="tabpanel" aria-labelledby="tab-about">
+  <div class="card">
+    <h2>About This Project</h2>
+    <p>
+      This site presents my Masters research on San Francisco crime in 2024. I built interactive visualizations in
+      <strong>Tableau</strong> and spatial analyses in <strong>ArcGIS</strong> to explore trends, hotspots, and context.
+    </p>
+
+    <h3>Researcher</h3>
+    <div style="display:grid; grid-template-columns:96px 1fr; gap:14px; align-items:center; margin:12px 0;">
+      <img src="./Swikriti.jpg" alt="Portrait of Swikriti Joshi"
+           style="width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid #223243; background:#0a121b;">
+      <div>
+        <div style="font-weight:700; font-size:1.1rem;">Swikriti Joshi</div>
+        <div style="color:#9fb2c7;">Graduate Student — San Diego State University • Big Data Analytics</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+          <a href="mailto:sjoshi2639@sdsu.edu" style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
+            sjoshi2639@sdsu.edu
+          </a>
+          <a href="https://www.linkedin.com/in/swikritijoshi" target="_blank" rel="noopener"
+             style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
+            LinkedIn: /in/swikritijoshi
+          </a>
+        </div>
       </div>
-    </section>
+    </div>
+
+    <h3>Capstone Context</h3>
+    <p class="note">
+      This project is for my capstone class <strong>BDA-600</strong> and focuses on crime analysis for the
+      <strong>City and County of San Francisco — 2024</strong>.
+    </p>
+
+    <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
+    <div class="pill">Last updated: <span id="updated"></span></div>
+  </div>
+</section>
   </main>
 
   <footer>
