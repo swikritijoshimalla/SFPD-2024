@@ -158,8 +158,57 @@
     <!-- Tableau / Trends -->
     <section id="tableau" role="tabpanel" aria-labelledby="tab-tableau">
       <div class="card">
-        <h2>Trends & Comparisons (Tableau)</h2>
-              </div>
+  <div class="card" style="padding:24px;">
+  <h1 style="font-size:1.6rem; font-weight:700; margin-bottom:18px; text-align:center; color:var(--accent);">
+    Top 5 Reported Crime Categories in 2024
+  </h1>
+
+  <div style="display:grid; gap:18px;">
+    <!-- Assault -->
+    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Assault</h2>
+      <p style="color:#b9c8d8; line-height:1.6;">
+        Assault involves intentionally causing physical harm or attempting to harm another person. It can include acts like hitting, pushing, or threatening someone with a weapon. Assault crimes often occur in both domestic and public settings.
+      </p>
+    </div>
+
+    <!-- Burglary -->
+    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Burglary</h2>
+      <p style="color:#b9c8d8; line-height:1.6;">
+        Burglary is the unlawful entry into a building or structure with the intent to commit theft or another crime inside. It doesn’t require that anything be stolen-only that the person entered with criminal intent.
+        Examples include break-ins at homes, garages, or businesses. This crime often causes property loss and emotional distress for victims.
+      </p>
+    </div>
+
+    <!-- Larceny Theft -->
+    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Larceny Theft</h2>
+      <p style="color:#b9c8d8; line-height:1.6;">
+        Larceny theft refers to the unlawful taking of someone else’s property without using force, threats, or breaking into a structure. It includes shoplifting, stealing bicycles, or taking unattended personal belongings.
+        The key factor is intent to permanently deprive the owner of their property. It remains one of the most common property crimes.
+      </p>
+    </div>
+
+    <!-- Malicious Mischief -->
+    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Malicious Mischief</h2>
+      <p style="color:#b9c8d8; line-height:1.6;">
+        Malicious mischief involves intentionally damaging or defacing property belonging to another person or the public. Acts like graffiti, vandalism, or breaking windows are common examples.
+        Unlike theft, the motive isn’t to steal but to cause harm or inconvenience. Such crimes impact both private property and public spaces.
+      </p>
+    </div>
+
+    <!-- Motor Vehicle Theft -->
+    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Motor Vehicle Theft</h2>
+      <p style="color:#b9c8d8; line-height:1.6;">
+        Motor vehicle theft is stealing or attempting to steal a car, motorcycle, or other motorized vehicle. It can involve taking a vehicle by force, deception, or without consent-often called “joyriding.”
+        This crime results in major financial losses and is closely monitored by law enforcement to identify patterns and improve vehicle recovery rates.
+      </p>
+    </div>
+  </div>
+</div>
 
       <!-- Gallery 1: Top 5 Incident Types by Day (7 images) -->
       <div class="card">
@@ -337,13 +386,7 @@
 <!-- About -->
 <section id="about" role="tabpanel" aria-labelledby="tab-about">
   <div class="card">
-    <h2>About This Project</h2>
-    <p>
-      This site presents my Masters research on San Francisco crime in 2024. I built interactive visualizations in
-      <strong>Tableau</strong> and spatial analyses in <strong>ArcGIS</strong> to explore trends, hotspots, and context.
-    </p>
-
-    <h3>Researcher</h3>
+    <h1>About This Project</h1>
     <div style="display:grid; grid-template-columns:96px 1fr; gap:14px; align-items:center; margin:12px 0;">
       <img src="./Swikriti.jpg" alt="Portrait of Swikriti Joshi"
            style="width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid #223243; background:#0a121b;">
@@ -362,20 +405,19 @@
       </div>
     </div>
 
-    <h3>Capstone Context</h3>
     <p class="note">
-      This project is for my capstone class <strong>BDA-600</strong> and focuses on crime analysis for the
-      <strong>City and County of San Francisco — 2024</strong>.
+    <p>
+      This site presents my Masters research and analysis on the City and County of San Francisco Police Department’s crime data, focusing on reported incidents and crime trends in 2024. Using interactive visualizations created in Tableau and spatial analyses conducted in ArcGIS, I explored patterns, hotspots, and contextual factors that shape public safety across the city. This project not only helps San Francisco residents better understand the crime dynamics within their neighborhoods, but also provides valuable insights for the San Francisco Police Department. By examining time-based trends and geographic concentrations of incidents, the analysis can support data-informed decisions in shift planning, resource allocation, and strategic policing efforts.
+    </p>
     </p>
 
     <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
-    <div class="pill">Last updated: <span id="updated"></span></div>
   </div>
 </section>
   </main>
 
   <footer>
-    © <span id="year"></span> • San Francisco Crime Data Analysis — 2024 • For research & educational purposes.
+    © <span id="year"></span> • San Francisco Crime Data Analysis - 2024 • For research & educational purposes.
   </footer>
 
   <script>
