@@ -82,7 +82,7 @@
 
     /* Lightbox */
     .lightbox{
-      position:fixed; inset:0; display:none; place-items:center; background:rgba(8,12,18,.9); z-index:50;
+      position:fixed; inset:0; display:none; place-items:center; background:rgba(8,12,18,.9); z-index:9999;
     }
     .lightbox.active{display:grid}
     .lightbox img{max-width:92vw; max-height:86vh; border-radius:10px; border:1px solid #1b2a3a; background:#0b0f14}
@@ -96,6 +96,7 @@
     }
     .lb-close{position:fixed; top:16px; right:16px;}
     .lb-meta{position:fixed; bottom:12px; left:0; right:0; text-align:center; color:#9fb2c7; font-size:.95rem;}
+    .figure{ pointer-events:auto; } /* ensure figures receive clicks */
   </style>
 </head>
 <body>
@@ -157,63 +158,69 @@
 
     <!-- Tableau / Trends -->
     <section id="tableau" role="tabpanel" aria-labelledby="tab-tableau">
-      <div class="card">
-  <div class="card" style="padding:24px;">
-  <h1 style="font-size:1.6rem; font-weight:700; margin-bottom:18px; text-align:center; color:var(--accent);">
-    Top 5 Reported Crime Categories in 2024
-  </h1>
+      <!-- Tableau embed derived from your authoring link -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <iframe
+          title="Top5CrimeDays-Dashboard"
+          src="https://public.tableau.com/views/Top5CrimeDays-Dashboard/Top5CrimeDays-Dashboard?:embed=y&:showVizHome=no"
+          style="width:100%; height:820px; border:0;"
+          allowfullscreen
+        ></iframe>
+      </div>
 
-  <div style="display:grid; gap:18px;">
-    <!-- Assault -->
-    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
-      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Assault</h2>
-      <p style="color:#b9c8d8; line-height:1.6;">
-        Assault involves intentionally causing physical harm or attempting to harm another person. It can include acts like hitting, pushing, or threatening someone with a weapon. Assault crimes often occur in both domestic and public settings.
-      </p>
-    </div>
+      <!-- Descriptive card -->
+      <div class="card" style="padding:24px;">
+        <h1 style="font-size:1.6rem; font-weight:700; margin-bottom:18px; text-align:center; color:var(--accent);">
+          Top 5 Reported Crime Categories in 2024
+        </h1>
 
-    <!-- Burglary -->
-    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
-      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Burglary</h2>
-      <p style="color:#b9c8d8; line-height:1.6;">
-        Burglary is the unlawful entry into a building or structure with the intent to commit theft or another crime inside. It doesn’t require that anything be stolen-only that the person entered with criminal intent.
-        Examples include break-ins at homes, garages, or businesses. This crime often causes property loss and emotional distress for victims.
-      </p>
-    </div>
+        <div style="display:grid; gap:18px;">
+          <!-- Assault -->
+          <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+            <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Assault</h2>
+            <p style="color:#b9c8d8; line-height:1.6;">
+              Assault involves intentionally causing physical harm or attempting to harm another person. It can include acts like hitting, pushing, or threatening someone with a weapon. Assault crimes often occur in both domestic and public settings.
+            </p>
+          </div>
 
-    <!-- Larceny Theft -->
-    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
-      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Larceny Theft</h2>
-      <p style="color:#b9c8d8; line-height:1.6;">
-        Larceny theft refers to the unlawful taking of someone else’s property without using force, threats, or breaking into a structure. It includes shoplifting, stealing bicycles, or taking unattended personal belongings.
-        The key factor is intent to permanently deprive the owner of their property. It remains one of the most common property crimes.
-      </p>
-    </div>
+          <!-- Burglary -->
+          <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+            <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Burglary</h2>
+            <p style="color:#b9c8d8; line-height:1.6;">
+              Burglary is the unlawful entry into a building or structure with the intent to commit theft or another crime inside. It doesn’t require that anything be stolen, only that the person entered with criminal intent. Examples include break-ins at homes, garages, or businesses.
+            </p>
+          </div>
 
-    <!-- Malicious Mischief -->
-    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
-      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Malicious Mischief</h2>
-      <p style="color:#b9c8d8; line-height:1.6;">
-        Malicious mischief involves intentionally damaging or defacing property belonging to another person or the public. Acts like graffiti, vandalism, or breaking windows are common examples.
-        Unlike theft, the motive isn’t to steal but to cause harm or inconvenience. Such crimes impact both private property and public spaces.
-      </p>
-    </div>
+          <!-- Larceny Theft -->
+          <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+            <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Larceny Theft</h2>
+            <p style="color:#b9c8d8; line-height:1.6;">
+              Larceny theft is the unlawful taking of someone else’s property without using force, threats, or breaking into a structure. It includes shoplifting, stealing bicycles, or taking unattended personal belongings.
+            </p>
+          </div>
 
-    <!-- Motor Vehicle Theft -->
-    <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
-      <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Motor Vehicle Theft</h2>
-      <p style="color:#b9c8d8; line-height:1.6;">
-        Motor vehicle theft is stealing or attempting to steal a car, motorcycle, or other motorized vehicle. It can involve taking a vehicle by force, deception, or without consent-often called “joyriding.”
-        This crime results in major financial losses and is closely monitored by law enforcement to identify patterns and improve vehicle recovery rates.
-      </p>
-    </div>
-  </div>
-</div>
+          <!-- Malicious Mischief -->
+          <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+            <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Malicious Mischief</h2>
+            <p style="color:#b9c8d8; line-height:1.6;">
+              Malicious mischief involves intentionally damaging or defacing property belonging to another person or the public. Acts like graffiti, vandalism, or breaking windows are common examples.
+            </p>
+          </div>
+
+          <!-- Motor Vehicle Theft -->
+          <div style="background:linear-gradient(180deg,#0e1823,#0c131c); border:1px solid #1b2a3a; border-radius:12px; padding:16px 20px; box-shadow:inset 0 0 0 1px #16202f;">
+            <h2 style="margin:0 0 8px; font-size:1.2rem; color:#ffffff;">Motor Vehicle Theft</h2>
+            <p style="color:#b9c8d8; line-height:1.6;">
+              Motor vehicle theft is stealing or attempting to steal a car, motorcycle, or other motorized vehicle. It can involve taking a vehicle by force, deception, or without consent, often called “joyriding.”
+            </p>
+          </div>
+        </div>
+      </div>
 
       <!-- Gallery 1: Top 5 Incident Types by Day (7 images) -->
       <div class="card">
         <h2>Top 5 Crime Categories and Average Daily Incidents</h2>
-        <p class="note">This visualization highlights the five most reported crime categories in 2024 and shows how their average occurrences vary by day of the week. It helps identify patterns in daily crime activity and supports better planning for public safety and resource allocation.</p>
+        <p class="note">This visualization highlights the five most reported crime categories in 2024 and shows how their average occurrences vary by day of the week. Click an image to view larger.</p>
 
         <div class="gallery" id="trend-gallery">
           <figure class="figure" data-day="Sunday">
@@ -250,7 +257,7 @@
       <!-- Gallery 2: Top 5 Crime Categories Day & Time Pattern (5 images) -->
       <div class="card">
         <h2>Top 5 Crime Categories: Day and Time Patterns</h2>
-        <p class="note">This visualization shows how the top five crime categories vary across different days of the week and times of day. By analyzing these patterns, we can identify when certain crimes are most likely to occur and spot potential high-risk periods. The goal is to provide insights that help law enforcement and city officials plan effective patrol schedules and prevention strategies.</p>
+        <p class="note">These panels show how the top crime categories vary across days and hours. Click an image to view larger.</p>
 
         <div class="gallery" id="pattern-gallery">
           <figure class="figure" data-label="Day & Time Pattern - Malicious Mischief">
@@ -275,17 +282,6 @@
           </figure>
         </div>
       </div>
-
-      <!-- Lightbox (shared by all galleries) -->
-      <div class="lightbox" id="lb" aria-modal="true" role="dialog" aria-label="Image viewer" tabindex="-1">
-        <img id="lb-img" alt="">
-        <div class="lb-controls" aria-hidden="true">
-          <button class="lb-btn" id="lb-prev" title="Previous (←)" aria-label="Previous">&#x2039;</button>
-          <button class="lb-btn" id="lb-next" title="Next (→)" aria-label="Next">&#x203A;</button>
-        </div>
-        <button class="lb-btn lb-close" id="lb-close" title="Close (Esc)" aria-label="Close">&#x2715;</button>
-        <div class="lb-meta" id="lb-meta"></div>
-      </div>
     </section>
 
     <!-- ArcGIS -->
@@ -293,35 +289,14 @@
       <div class="card">
         <h2>Hotspots & Spatial Context (ArcGIS)</h2>
         <p class="note">
-          In ArcGIS Online, open your map/app → <span class="kbd">Embed in Website</span> → copy the <code>&lt;iframe&gt;</code> and replace the one below.
-          Supports Instant Apps, Dashboards, StoryMaps, or a Web Map viewer link.
+          Explore 2024 hotspots spatially. Pan, zoom, and inspect neighborhood patterns.
         </p>
         <div class="iframe-wrap">
-          <!-- Replace with your ArcGIS embed (e.g., Instant App or Dashboard appid) -->
           <iframe
             title="ArcGIS: SF Crime Hotspots 2024"
-            src="https://www.arcgis.com/apps/instant/basic/index.html?appid=YOUR_APP_ID"
+            src="https://www.arcgis.com/apps/dashboards/d85858620c3b41648ffa7d91e9c8928c"
             allowfullscreen
           ></iframe>
-        </div>
-        <div class="grid two" style="margin-top:12px">
-          <div class="card">
-            <h3>Suggested Layers</h3>
-            <ul>
-              <li>Crime incidents (points, 2024 filter)</li>
-              <li>Kernel density or hot spot analysis</li>
-              <li>Police districts, neighborhoods, streets</li>
-              <li>Public amenities (lighting, transit stops) for context</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>User Interactions</h3>
-            <ul>
-              <li>Time slider to focus by month/quarter</li>
-              <li>Category filters (violent, property, quality of life)</li>
-              <li>Click-to-inspect with incident detail popups</li>
-            </ul>
-          </div>
         </div>
       </div>
     </section>
@@ -383,43 +358,53 @@
       </div>
     </section>
 
-<!-- About -->
-<section id="about" role="tabpanel" aria-labelledby="tab-about">
-  <div class="card">
-    <h1>About This Project</h1>
-    <div style="display:grid; grid-template-columns:96px 1fr; gap:14px; align-items:center; margin:12px 0;">
-      <img src="./Swikriti.jpg" alt="Portrait of Swikriti Joshi"
-           style="width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid #223243; background:#0a121b;">
-      <div>
-        <div style="font-weight:700; font-size:1.1rem;">Swikriti Joshi</div>
-        <div style="color:#9fb2c7;">Graduate Student</div>
-        <div style="color:#9fb2c7;">San Diego State University - Big Data Analytics</div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-          <a href="mailto:sjoshi2639@sdsu.edu" style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
-            sjoshi2639@sdsu.edu
-          </a>
-          <a href="https://www.linkedin.com/in/swikritijoshi" target="_blank" rel="noopener"
-             style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
-            LinkedIn: /in/swikritijoshi
-          </a>
+    <!-- About -->
+    <section id="about" role="tabpanel" aria-labelledby="tab-about">
+      <div class="card">
+        <h1>About This Project</h1>
+        <div style="display:grid; grid-template-columns:96px 1fr; gap:14px; align-items:center; margin:12px 0;">
+          <img src="./Swikriti.png" alt="Portrait of Swikriti Joshi"
+               style="width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid #223243; background:#0a121b;">
+          <div>
+            <div style="font-weight:700; font-size:1.1rem;">Swikriti Joshi</div>
+            <div style="color:#9fb2c7;">Graduate Student</div>
+            <div style="color:#9fb2c7;">San Diego State University - Big Data Analytics</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+              <a href="mailto:sjoshi2639@sdsu.edu" style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
+                sjoshi2639@sdsu.edu
+              </a>
+              <a href="https://www.linkedin.com/in/swikritijoshi" target="_blank" rel="noopener"
+                 style="color:#b9d4ea; text-decoration:none; border:1px solid #1b2a3a; padding:6px 10px; border-radius:999px; background:#0e1823;">
+                LinkedIn: /in/swikritijoshi
+              </a>
+            </div>
+          </div>
         </div>
+
+        <p class="note">
+          This site presents my Masters research and analysis on the City and County of San Francisco Police Department’s crime data, focusing on reported incidents and crime trends in 2024. Using interactive visualizations created in Tableau and spatial analyses conducted in ArcGIS, I explored patterns, hotspots, and contextual factors that shape public safety across the city. The analysis supports data-informed decisions in shift planning, resource allocation, and strategic policing efforts.
+        </p>
+
+        <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
+        <div class="pill">Last updated: <span id="updated"></span></div>
       </div>
-    </div>
-
-    <p class="note">
-    <p>
-      This site presents my Masters research and analysis on the City and County of San Francisco Police Department’s crime data, focusing on reported incidents and crime trends in 2024. Using interactive visualizations created in Tableau and spatial analyses conducted in ArcGIS, I explored patterns, hotspots, and contextual factors that shape public safety across the city. This project not only helps San Francisco residents better understand the crime dynamics within their neighborhoods, but also provides valuable insights for the San Francisco Police Department. By examining time-based trends and geographic concentrations of incidents, the analysis can support data-informed decisions in shift planning, resource allocation, and strategic policing efforts.
-    </p>
-    </p>
-
-    <div class="pill">Built with HTML/CSS • Tableau • ArcGIS</div>
-  </div>
-</section>
+    </section>
   </main>
 
   <footer>
     © <span id="year"></span> • San Francisco Crime Data Analysis - 2024 • For research & educational purposes.
   </footer>
+
+  <!-- Lightbox (shared by all galleries) — placed OUTSIDE tabs to avoid hidden/stack issues) -->
+  <div class="lightbox" id="lb" aria-modal="true" role="dialog" aria-label="Image viewer" tabindex="-1">
+    <img id="lb-img" alt="">
+    <div class="lb-controls" aria-hidden="true">
+      <button class="lb-btn" id="lb-prev" title="Previous (←)" aria-label="Previous">&#x2039;</button>
+      <button class="lb-btn" id="lb-next" title="Next (→)" aria-label="Next">&#x203A;</button>
+    </div>
+    <button class="lb-btn lb-close" id="lb-close" title="Close (Esc)" aria-label="Close">&#x2715;</button>
+    <div class="lb-meta" id="lb-meta"></div>
+  </div>
 
   <script>
     // Simple tab behavior + accessibility
@@ -436,146 +421,11 @@
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); tab.click(); }
       });
     });
+
     // Dates
     document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('updated').textContent = new Date().toISOString().slice(0,10);
-
-    // --- Socrata metadata → “Data Sources” tab ---
-    (function loadSocrataMeta(){
-      const DS_ID = 'wg3w-h783';
-      const PORTAL = 'https://data.sfgov.org';
-      const metaUrl = `${PORTAL}/api/views/${DS_ID}`;
-
-      const $ = (id) => document.getElementById(id);
-      const setText = (id, val) => { const el = $(id); if (el) el.textContent = (val ?? '—'); };
-
-      // Static links
-      $('ds-portal').href = `${PORTAL}/d/${DS_ID}`;
-      $('ds-about').href  = `${PORTAL}/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/${DS_ID}/about_data`;
-      $('ds-json').href   = `${PORTAL}/resource/${DS_ID}.json`;
-      $('ds-csv').href    = `${PORTAL}/resource/${DS_ID}.csv`;
-
-      // unix seconds → human date
-      const fmtDate = (secs) => {
-        try { if (!secs) return '—';
-          const d = new Date(secs * 1000);
-          return d.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit'});
-        } catch { return '—'; }
-      };
-
-      // safe description
-      const sanitizeToHtml = (text) => {
-        const div = document.createElement('div');
-        div.textContent = text ?? '';
-        return (div.textContent || '').replace(/\n/g, '<br>');
-      };
-
-      // heuristic for "Update Frequency"
-      const findFrequency = (meta) => {
-        const cf = meta?.metadata?.custom_fields || {};
-        const pub = cf.Publishing || cf.PUBLISHING || {};
-        const admin = cf.Administration || cf.ADMINISTRATION || {};
-        const keys = ['Update Frequency','Update frequency','Frequency','Update Schedule','Refresh Rate'];
-        for (const k of keys) {
-          if (pub && Object.prototype.hasOwnProperty.call(pub, k)) return pub[k];
-          if (admin && Object.prototype.hasOwnProperty.call(admin, k)) return admin[k];
-          if (meta?.metadata && Object.prototype.hasOwnProperty.call(meta.metadata, k)) return meta.metadata[k];
-        }
-        return '—';
-      };
-
-      fetch(metaUrl)
-        .then(r => r.json())
-        .then(meta => {
-          setText('ds-title', meta?.name || 'Police Department Incident Reports (2018–Present)');
-          $('ds-description').innerHTML = sanitizeToHtml(meta?.description || '—');
-
-          setText('ds-owner', meta?.owner?.displayName || '—');
-          setText('ds-updated', fmtDate(meta?.rowsUpdatedAt));
-          setText('ds-frequency', findFrequency(meta));
-
-          const columns = Array.isArray(meta?.columns) ? meta.columns.length : undefined;
-          const rows = meta?.numberOfRows ?? meta?.tableAuthor?.totalRows ?? meta?.columnsComputed?.count;
-          setText('ds-shape', (rows && columns) ? `${Number(rows).toLocaleString()} × ${columns}` : '—');
-
-          const attachments = meta?.metadata?.attachments || meta?.attachments || [];
-          const dict = attachments.find(a =>
-            /dictionary/i.test(a?.name || '') ||
-            /data\s*dictionary/i.test(a?.description || '') ||
-            /\.pdf$/i.test(a?.filename || '')
-          );
-          if (dict && dict.assetId) {
-            const dictUrl = `${PORTAL}/api/views/${DS_ID}/files/${dict.assetId}?download=true`;
-            const link = document.getElementById('ds-dict');
-            link.href = dictUrl; link.style.display = '';
-          } else {
-            document.getElementById('ds-dict').style.display = 'none';
-          }
-        })
-        .catch(() => {
-          const d = document.getElementById('ds-description');
-          if (d) d.textContent = 'Could not load live metadata from data.sfgov.org.';
-        });
-    })();
-
-    // --- Shared lightbox for all galleries ---
-    (function(){
-      const figures = Array.from(document.querySelectorAll('.gallery .figure'));
-      if (!figures.length) return;
-
-      const lb = document.getElementById('lb');
-      const lbImg = document.getElementById('lb-img');
-      const lbMeta = document.getElementById('lb-meta');
-      const prevBtn = document.getElementById('lb-prev');
-      const nextBtn = document.getElementById('lb-next');
-      const closeBtn = document.getElementById('lb-close');
-
-      let idx = 0;
-
-      const open = (i) => {
-        idx = (i + figures.length) % figures.length;
-        const fig = figures[idx];
-        const img = fig.querySelector('img');
-        lbImg.src = img.currentSrc || img.src;
-        lbImg.alt = img.alt || '';
-        const label =
-          fig.dataset.label ||
-          (fig.dataset.day ? `Top 5 Incident Types — ${fig.dataset.day}` : '') ||
-          (fig.querySelector('figcaption')?.textContent || '');
-        lbMeta.textContent = label;
-        lb.classList.add('active');
-        lb.focus();
-      };
-      const close = () => {
-        lb.classList.remove('active');
-        lbImg.removeAttribute('src');
-      };
-      const next = () => open(idx + 1);
-      const prev = () => open(idx - 1);
-
-      figures.forEach((fig, i) => {
-        fig.addEventListener('click', () => open(i));
-        fig.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
-        });
-        fig.tabIndex = 0;
-        fig.setAttribute('role','button');
-        const lbl = fig.dataset.label || fig.dataset.day || fig.querySelector('figcaption')?.textContent || 'image';
-        fig.setAttribute('aria-label', `Open ${lbl}`);
-      });
-
-      nextBtn.addEventListener('click', next);
-      prevBtn.addEventListener('click', prev);
-      closeBtn.addEventListener('click', close);
-      lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
-
-      document.addEventListener('keydown', (e) => {
-        if (!lb.classList.contains('active')) return;
-        if (e.key === 'Escape') close();
-        else if (e.key === 'ArrowRight') next();
-        else if (e.key === 'ArrowLeft') prev();
-      });
-    })();
+    const upd = document.getElementById('updated');
+    if (upd) upd.textContent = new Date().toISOString().slice(0,10);
   </script>
 </body>
 </html>
